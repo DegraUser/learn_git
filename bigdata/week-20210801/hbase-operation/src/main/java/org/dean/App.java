@@ -14,6 +14,7 @@ public class App {
     public static void main(String[] args) throws URISyntaxException {
         // 加载HBase的配置
         Configuration configuration = HBaseConfiguration.create();
+	configuration.set("hbase.zookeeper.quorum", "jikehadoop01,jikehadoop02,jikehadoop03");
 
 /*
         // 读取配置文件
@@ -31,7 +32,6 @@ public class App {
             HTableDescriptor tableDescriptor = new HTableDescriptor(tableName);
 
             // 新建一个列族名为mycf的列族
-            HColumnDescriptor mycf = new HColumnDescriptor("mycf");
 			HColumnDescriptor infocf = new HColumnDescriptor("info");
 			HColumnDescriptor scorecf = new HColumnDescriptor("score");
 			
@@ -87,13 +87,16 @@ public class App {
             Result result = table.get(get);
             // 从查询结果中取出name列，然后打印（这里默认取最新版本的值，如果要取其他版本要使用Cell对象）
             byte[] student_id_t = result.getValue(Bytes.toBytes("info"), Bytes.toBytes("student_id"));
-            System.out.println(Bytes.toString(student_id_t));
-			byte[] class_t = result.getValue(Bytes.toBytes("info"), Bytes.toBytes("class"));
+	    byte[] class_t = result.getValue(Bytes.toBytes("info"), Bytes.toBytes("class"));
+	    byte[] understanding_t = result.getValue(Bytes.toBytes("score"), Bytes.toBytes("understanding"));
+	    byte[] programming_t = result.getValue(Bytes.toBytes("score"), Bytes.toBytes("programming"));
+            System.out.println("name: " + Bytes.toString(student_id_t) + " class: " + Bytes.toString(class_t)
+				+ " understanding: "+ Bytes.toString(understanding_t) + " programming: " + Bytes.toString(programming_t));
+/*
             System.out.println(Bytes.toString(class_t));
-			byte[] understanding_t = result.getValue(Bytes.toBytes("score"), Bytes.toBytes("understanding"));
             System.out.println(Bytes.toString(understanding_t));
-			byte[] programming_t = result.getValue(Bytes.toBytes("score"), Bytes.toBytes("programming"));
             System.out.println(Bytes.toString(programming_t));
+*/
             if (table != null) table.close();
 
         } catch (Exception e) {
@@ -117,15 +120,4 @@ public class App {
     }
 }
 
-/**
- * Hello world!
- *
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
-}
- */
 
