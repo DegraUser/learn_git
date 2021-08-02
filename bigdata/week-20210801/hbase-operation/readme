@@ -1,4 +1,3 @@
-代码已经完成骨架，还未调试通
 create 'songwanquan_student', {NAME => 'info'}, {NAME => 'score'}
 put 'songwanquan_student', 'Tom', 'info:student_id', '20210000000001'
 put 'songwanquan_student', 'Tom', 'info:class', '1'
